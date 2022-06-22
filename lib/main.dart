@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Pokemon Flutter',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
+      // themeMode: mode,
       home: const TopPage(),
     );
   }
