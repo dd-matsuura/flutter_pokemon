@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pokemon/theme_mode.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeModeNotifier extends ChangeNotifier {
   late ThemeMode _themeMode;
 
-  ThemeModeNotifier() {
-    _init();
+  ThemeModeNotifier(SharedPreferences pref) {
+    _init(pref);
   }
 
   ThemeMode get mode => _themeMode;
 
   // 初期化
-  void _init() async {
-    _themeMode = await loadThemeMode();
+  void _init(SharedPreferences pref) async {
+    _themeMode = await loadThemeMode(pref);
     notifyListeners();
   }
 
