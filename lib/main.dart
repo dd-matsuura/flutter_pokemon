@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pokemon/notifiers/pokemons_notifier.dart';
 import 'package:flutter_pokemon/poke_list_item.dart';
 import 'package:flutter_pokemon/setting.dart';
-import 'package:flutter_pokemon/theme_mode_notifier.dart';
+import 'package:flutter_pokemon/notifiers/theme_mode_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,10 +10,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences pref = await SharedPreferences.getInstance();
   final themeModeNotifier = ThemeModeNotifier(pref);
-  runApp(ChangeNotifierProvider(
-    create: (context) => themeModeNotifier,
-    child: const MyApp(),
-  ));
+  final pokemonsNotifier = PokemonsNotifier();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeModeNotifier>(
+          create: (context) => themeModeNotifier,
+        ),
+        ChangeNotifierProvider<PokemonsNotifier>(
+          create: (context) => pokemonsNotifier,
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -78,10 +89,16 @@ class PokeList extends StatelessWidget {
   const PokeList({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      itemCount: 898,
-      itemBuilder: (context, index) => PokeListItem(index: index),
+    return Consumer<PokemonsNotifier>(
+      builder: (context, pokes, child) => ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return PokeListItem(
+            poke: pokes.byId(index + 1),
+          );
+        },
+      ),
     );
   }
 }
