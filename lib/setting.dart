@@ -22,11 +22,13 @@ class _SettingsState extends State<Settings> {
                 ? 'System'
                 : (mode.mode == ThemeMode.dark ? 'Dark' : 'Light')),
             onTap: () async {
+              // 設定画面に遷移
               var ret = await Navigator.of(context).push<ThemeMode>(
                 MaterialPageRoute(
-                  builder: (context) => ThemeModeSelectionPage(init: mode.mode),
+                  builder: (context) => ThemeModeSelectionPage(mode: mode.mode),
                 ),
               );
+              // retがnullでなければ値を更新
               if (ret != null) {
                 mode.update(ret);
               }
@@ -57,9 +59,9 @@ class _SettingsState extends State<Settings> {
 class ThemeModeSelectionPage extends StatefulWidget {
   const ThemeModeSelectionPage({
     Key? key,
-    required this.init,
+    required this.mode,
   }) : super(key: key);
-  final ThemeMode init;
+  final ThemeMode mode;
 
   @override
   State<ThemeModeSelectionPage> createState() => _ThemeModeSelectionPageState();
@@ -70,7 +72,7 @@ class _ThemeModeSelectionPageState extends State<ThemeModeSelectionPage> {
   @override
   void initState() {
     super.initState();
-    _current = widget.init;
+    _current = widget.mode;
   }
 
   @override
