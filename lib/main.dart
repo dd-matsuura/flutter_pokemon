@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pokemon/poke_list_item.dart';
+import 'package:flutter_pokemon/theme_mode.dart';
 
 void main() {
   runApp(const MyApp());
@@ -77,6 +78,14 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   ThemeMode _themeMode = ThemeMode.system;
+
+  @override
+  void initState() {
+    super.initState();
+    // loadThemeMode()が呼ばれた後に、thenを実行してsetStateで処理を実行
+    loadThemeMode().then((val) => setState(() => _themeMode = val));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -94,6 +103,7 @@ class _SettingsState extends State<Settings> {
               ),
             );
             setState(() => _themeMode = ret!);
+            await saveThemeMode(_themeMode);
           },
         ),
         SwitchListTile(
